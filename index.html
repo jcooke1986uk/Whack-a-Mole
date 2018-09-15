@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Whack-A-Mole</title>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
+	<script src="script.js"></script>
+	<style>
+	* { margin: 0;
+		padding: 0;
+	}
+
+	canvas {
+		background-color: #a3c6e7;
+	}
+
+	body {
+		padding: 20px;
+	}
+	</style>
+</head>
+<body>
+	<canvas id="canvas" ClipToBounds="true" height="400px" width="800px">
+
+	</canvas>
+	<div>
+		<button id="starteasy">Play Easy</button>
+		<button id="starthard">PLAY HARD</button>
+		<br>
+		<span>Score:</span><div id="score">0</div>
+		<br>
+		<span>Timer:</span><div id="timer">45</div>
+	</div>
+	<div>
+		<label>Custome Game Time (default 45 seconds)</label>
+		<input id="gameTime" type="number" name="gameTime">
+		<br>
+		<label>Boxes visible for (default 2 seconds)</label>
+		<input id="boxTime" type="number" name="boxTime">
+	</div>
+</body>
+</html>
