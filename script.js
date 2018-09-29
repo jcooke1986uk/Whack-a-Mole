@@ -1,17 +1,17 @@
 $(document).ready(function() {
 	// global variables
-	var xPos;
-	var yPos;
+	var xPos = 0;
+	var yPos = 0;
 	
-	var gameTime;
-	var boxTime;
+	var gameTime = 0;
+	var boxTime = 0;
 
-	var height;
-	var width;
+	var boxHeight = 0;
+	var boxWidth = 0;
 	
-	var r;
-	var g;
-	var b;
+	var r = 0;
+	var g = 0;
+	var b = 0;
 
 	var easy = true;
 	var hard = false;
@@ -31,14 +31,15 @@ $(document).ready(function() {
 		easy = true;
 		hard = false;
 		gameSetup(easy,hard);
-	})
+	});
+	// Start Hard game not yet implemented
 	$('#starthard').on('click', function(){
 		$(this).hide();
 		$('#starteasy').hide();
 		easy = false;
 		hard = true;
 		gameSetup(easy,hard);
-	})
+	});
 
 	function gameSetup(easy,hard){
 
@@ -49,6 +50,7 @@ $(document).ready(function() {
 		else {
 			gameTime = 45;
 		}
+
 		$('#timer').text(gameTime);
 
 		// Check if there is a custom box duration time
@@ -68,26 +70,26 @@ $(document).ready(function() {
 	
 		// Set up the timer interval
 		var timer = setInterval(function(){
-			// Need a clear canvas each time a new one is drawn
+			// Need a clear canvas each time a new box is drawn
 			// Need to look at a different way of doing this so that multiple
 			// boxes can exist at once
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			// Add a click event listener on the whole canvas to run the updateScore function
 			canvas[0].addEventListener('click', updateScore, true);
 
-			// Start drawing, bitches
+			// Start drawing
 			ctx.beginPath();
 			if (easy == true && hard == false) {
-				drawsquare(easy);
+				var drawnSquare = drawsquare(easy);
 			}
-			else {
-				drawsquare(hard);
-			}
+			//else {
+			//	drawsquare(hard);
+			//}
 		}, boxTime);
 
 		// Start the clock function counting
 		startclock(gameTime);
-	
+
 		// Ends game timer interval and removed the updateScore click event
 		setTimeout(function() {
 			clearInterval(timer); 
@@ -101,6 +103,7 @@ $(document).ready(function() {
 			gameTime--; 
 			$('#timer').text(gameTime); 
 		}, 1000);
+
 		// Ends counter
 		setTimeout(function() { 
 			clearInterval(countdown); 
@@ -112,19 +115,19 @@ $(document).ready(function() {
 
 	function drawsquare(difficulty){
 		// get random rgb color
-		var color = randomColor();
+		randomColor();
 		// get random box size
-		var size = randomSize();
+		randomSize();
 		// get a random x and y position
 		randomPos();
 
 		ctx.fillStyle = "rgba("+r+","+g+","+b+",1)"; 
-		ctx.fillRect(xPos,yPos,size.w,size.h);
+		ctx.fillRect(xPos,yPos,boxWidth,boxHeight);
 		ctx.stroke();
 
-		if (difficulty == hard) {
-			moveSquare();
-		}
+		//if (difficulty == hard) {
+		//	moveSquare();
+		//}
 	}
 
 	function randomPos(){
@@ -133,36 +136,32 @@ $(document).ready(function() {
     	yPos = Math.floor(Math.random() * canvas.height) + 20;
 
     	// Makes sure the box will never draw over the edge of the canvas
-    	// Shame it doesn't bloody work properly
-    	if (xPos >= canvas.width - width)
+    	if (xPos >= canvas.width - boxWidth)
     	{
-    		xPos = xPos - width;
+    		xPos = xPos - boxWidth;
     	}
-    	if (yPos >= canvas.height - height)
+    	if (yPos >= canvas.height - boxHeight)
     	{
-    		yPos = yPos - height;
+    		yPos = yPos - boxHeight;
     	}
-    	return xPos,yPos;
 	}
 
 	function randomColor(){
+		// Get a random number up to 255.
+		// Make sure the number is lowered to zero decimal places
 		r = Math.floor(Math.random() * 255);
 		g = Math.floor(Math.random() * 255);
 		b = Math.floor(Math.random() * 255);
-		return r,g,b;
 	}
 
 	function randomSize() {
-		var height = Math.floor(Math.random() * 200) + 30;
-		var width = Math.floor(Math.random() * 200) + 30;
-
-
-		return {w:width, h:height};
+		// Random number between 30 and 200
+		boxHeight = Math.floor(Math.random() * 200) + 30;
+		boxWidth = Math.floor(Math.random() * 200) + 30;
 	}
 
 	function moveSquare(){
 		//animate square
-
 	}
 
 	var scoreLabel = $('#score');
@@ -170,13 +169,14 @@ $(document).ready(function() {
 	function updateScore() {
 		var x = event.pageX - 20;
 		var y = event.pageY - 20;
-		
-		if (x >= xPos && x <= xPos+width && y >= yPos && y <= yPos+height){
+		// Check if click is within bounds of the drawn element
+		if (x >= xPos && x <= xPos+boxWidth && y >= yPos && y <= yPos+boxHeight){
 			score ++;
 			// Stops extra points from spam clicks
 			canvas[0].removeEventListener('click', updateScore, true);
 		}
 		else {
+			// If you want to lose extra points from spam clicks, be my guest
 			score --;
 		}
 		
